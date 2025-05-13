@@ -8,10 +8,10 @@ def testApp() {
 
 def deployApp() {
     echo 'Deploying the application'
-    if (params.ENVIRONMENT == 'prod') {
+    if (ENVIRONMENT == 'prod') {
         echo 'This is a production deployment!'
     } else {
-        echo "Deploying to ${params.ENVIRONMENT} environment"
+        echo "Deploying to ${ENVIRONMENT} environment"
     }
 }
 return this
