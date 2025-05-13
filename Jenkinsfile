@@ -1,5 +1,5 @@
 pipeline {
-    agant any
+    agent any
     tools {
         maven 'maven-3.9'
     }
