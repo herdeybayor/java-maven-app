@@ -1,3 +1,8 @@
+def test() {
+    echo 'Running tests...'
+    sh 'mvn test'
+}
+
 def buildJar() {
     echo 'Building the application...'
     sh 'mvn package'
