@@ -1,3 +1,5 @@
+def gv
+
 pipeline {
     agent any
     parameters {
@@ -6,9 +8,18 @@ pipeline {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Deployment environment')
     }
     stages {
+        stage('init') {
+            steps {
+                script {
+                    gv = load 'script.groovy'
+                }
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Bulding the application'
+                script {
+                    gv.buildApp()
+                }
             }
         }
 
@@ -17,7 +28,9 @@ pipeline {
                 expression { params.RUN_TESTS }
             }
             steps {
-                echo 'Testing the application'
+                script {
+                    gv.testApp()
+                }
             }
         }
 
