@@ -1,49 +1,33 @@
-def gv
-
 pipeline {
-    agent any
-    parameters {
-        string(name: 'APP_NAME', defaultValue: 'MyApp', description: 'Name of the application')
-        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Run tests after build')
+    agant any
+    tools {
+        maven 'maven-3.9'
     }
     stages {
-        stage('init') {
+        stage('build jar') {
             steps {
                 script {
-                    gv = load 'script.groovy'
+                    echo 'Building the application...'
+                    sh 'mvn package'
                 }
             }
         }
-        stage('Build') {
+        stage('build image') {
             steps {
                 script {
-                    gv.buildApp()
+                    echo 'Building the docker image...'
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-cred', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'docker build -t herdeybayor/java-maven-app:jma-2.0 .'
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh 'docker push herdeybayor/java-maven-app:jma-2.0'
+                    }
                 }
             }
         }
-
-        stage('Test') {
-            when {
-                expression { params.RUN_TESTS }
-            }
+        stage('deploy') {
             steps {
                 script {
-                    gv.testApp()
-                }
-            }
-        }
-
-        stage('Deploy') {
-            input {
-                message "Select the environment to deploy ${params.APP_NAME}"
-                ok 'Deploy'
-                parameters {
-                    choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Deployment environment')
-                }
-            }
-            steps {
-                script {
-                    gv.deployApp()
+                    echo 'Deploying the application...'
                 }
             }
         }
