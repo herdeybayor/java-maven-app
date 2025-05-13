@@ -36,8 +36,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deploying the application'
-                echo "Deploying ${params.APP_NAME} to ${params.ENVIRONMENT} environment"
+                script {
+                    gv.deployApp()
+                }
             }
         }
     }
