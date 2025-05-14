@@ -56,20 +56,24 @@ def commitVersion() {
         // Create commit message with [ci skip] to prevent webhook triggering another build
         def commitMsg = "Bump version to ${env.IMAGE_NAME} [ci skip]"
         
-        // First add the SSH key securely
-        sh 'eval `ssh-agent -s` && ssh-add "$SSH_KEY"'
-        
-        // Then do git operations with the committed message
-        sh """
+        // Do all operations in a single shell script to maintain environment variables
+        sh '''
+            # Start SSH agent and add key
+            eval `ssh-agent -s`
+            ssh-add "$SSH_KEY"
+            
             # Configure git user
             git config --global user.email "jenkins@jenkins.com"
             git config --global user.name "Jenkins CI"
             
+            # Commit and push changes
             git add pom.xml
-            git commit -m "${commitMsg}"
+            git commit -m "Bump version to ''' + "${env.IMAGE_NAME}" + ''' [ci skip]"
             git push origin HEAD:main
+            
+            # Kill SSH agent
             ssh-agent -k
-        """
+        '''
     }
 }
 return this
