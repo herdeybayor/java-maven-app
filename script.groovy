@@ -53,12 +53,18 @@ def deploy() {
 
 def commitVersion() {
     withCredentials([sshUserPrivateKey(credentialsId: 'git-herdeybayor', keyFileVariable: 'SSH_KEY')]) {
-        sh 'eval `ssh-agent -s`'
-        sh 'ssh-add "$SSH_KEY"'
-        sh 'git add pom.xml'
-        sh "git commit -m 'Bump version to ${env.IMAGE_NAME}'"
-        sh 'git push origin HEAD:main'
-        sh 'ssh-agent -k'
+        // Create commit message
+        def commitMsg = "Bump version to ${env.IMAGE_NAME}"
+        
+        // Use the message in the shell script
+        sh """
+            eval `ssh-agent -s`
+            ssh-add "$SSH_KEY"
+            git add pom.xml
+            git commit -m "${commitMsg}"
+            git push origin HEAD:main
+            ssh-agent -k
+        """
     }
 }
 return this
