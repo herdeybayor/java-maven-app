@@ -60,6 +60,11 @@ def commitVersion() {
         sh """
             eval `ssh-agent -s`
             ssh-add "$SSH_KEY"
+            
+            # Configure git user
+            git config --global user.email "jenkins@jenkins.com"
+            git config --global user.name "Jenkins CI"
+            
             git add pom.xml
             git commit -m "${commitMsg}"
             git push origin HEAD:main
