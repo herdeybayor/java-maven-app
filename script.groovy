@@ -52,10 +52,15 @@ def deploy() {
 }
 
 def commitVersion() {
-    withCredentials([usernamePassword(credentialsId: '	git-herdeybayor', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USERNAME')]) {
-        sh 'git add pom.xml'
-        sh 'git commit -m "Bump version to ${env.IMAGE_NAME}"'
-        sh 'git push'
+    withCredentials([sshUserPrivateKey(credentialsId: 'git-herdeybayor', keyFileVariable: 'SSH_KEY')]) {
+        sh '''
+            eval `ssh-agent -s`
+            ssh-add "$SSH_KEY"
+            git add pom.xml
+            git commit -m "Bump version to ${env.IMAGE_NAME}"
+            git push origin HEAD:main
+            ssh-agent -k
+        '''
     }
 }
 return this
