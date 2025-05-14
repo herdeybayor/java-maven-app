@@ -56,11 +56,11 @@ def commitVersion() {
         // Create commit message
         def commitMsg = "Bump version to ${env.IMAGE_NAME}"
         
-        // Use the message in the shell script
+        // First add the SSH key securely
+        sh 'eval `ssh-agent -s` && ssh-add "$SSH_KEY"'
+        
+        // Then do git operations with the committed message
         sh """
-            eval `ssh-agent -s`
-            ssh-add "$SSH_KEY"
-            
             # Configure git user
             git config --global user.email "jenkins@jenkins.com"
             git config --global user.name "Jenkins CI"
