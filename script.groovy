@@ -30,10 +30,10 @@ def buildImage() {
         
         try {
             // Build with cache options and tag both with version and latest
-            sh "docker build --pull --cache-from herdeybayor/java-maven-app:latest -t herdeybayor/java-maven-app:jma-$IMAGE_NAME -t herdeybayor/java-maven-app:latest ."
+            sh "docker build --pull --cache-from herdeybayor/java-maven-app:latest -t herdeybayor/java-maven-app:$IMAGE_NAME -t herdeybayor/java-maven-app:latest ."
             
             // Push both tags
-            sh "docker push herdeybayor/java-maven-app:jma-$IMAGE_NAME"
+            sh "docker push herdeybayor/java-maven-app:$IMAGE_NAME"
             sh "docker push herdeybayor/java-maven-app:latest"
             
             echo 'Docker image built and pushed successfully!'
@@ -41,7 +41,7 @@ def buildImage() {
             // Cleanup regardless of success or failure
             echo 'Cleaning up...'
             sh 'docker logout'
-            sh "docker rmi herdeybayor/java-maven-app:jma-$IMAGE_NAME || true"
+            sh "docker rmi herdeybayor/java-maven-app:$IMAGE_NAME || true"
             sh "docker rmi herdeybayor/java-maven-app:latest || true"
         }
     }
