@@ -68,7 +68,7 @@ def commitVersion() {
             
             # Commit and push changes
             git add pom.xml
-            git commit -m "Bump version to ''' + "${env.IMAGE_NAME}" + ''' [ci skip]"
+            git commit -m "Bump version to ''' + "${env.IMAGE_NAME}" + '''"
             git push origin HEAD:main
             
             # Kill SSH agent
