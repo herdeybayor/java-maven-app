@@ -50,4 +50,12 @@ def buildImage() {
 def deploy() {
     echo 'Deploying the application...'
 }
+
+def commitVersion() {
+    withCredentials([usernamePassword(credentialsId: '	git-herdeybayor', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USERNAME')]) {
+        sh 'git add pom.xml'
+        sh 'git commit -m "Bump version to ${env.IMAGE_NAME}"'
+        sh 'git push'
+    }
+}
 return this
