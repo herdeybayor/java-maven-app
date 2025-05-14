@@ -5,11 +5,11 @@ def test() {
 
 def buildJar() {
     echo 'Bumping project version...'
-    sh '''
+    sh """
         mvn build-helper:parse-version versions:set \
-          -DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion} \
+          -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} \
           versions:commit
-    '''
+    """
     echo 'Building the application...'
     sh 'mvn package'
 }
