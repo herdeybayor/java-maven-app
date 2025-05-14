@@ -53,8 +53,8 @@ def deploy() {
 
 def commitVersion() {
     withCredentials([sshUserPrivateKey(credentialsId: 'git-herdeybayor', keyFileVariable: 'SSH_KEY')]) {
-        // Create commit message
-        def commitMsg = "Bump version to ${env.IMAGE_NAME}"
+        // Create commit message with [ci skip] to prevent webhook triggering another build
+        def commitMsg = "Bump version to ${env.IMAGE_NAME} [ci skip]"
         
         // First add the SSH key securely
         sh 'eval `ssh-agent -s` && ssh-add "$SSH_KEY"'
