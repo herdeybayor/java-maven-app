@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+
 def gv
 
 pipeline {
@@ -21,11 +23,6 @@ pipeline {
             }
         }
         stage('build jar') {
-            when {
-                expression {
-                    env.BRANCH_NAME == 'main'
-                }
-            }
             steps {
                 script {
                     gv.buildJar()
